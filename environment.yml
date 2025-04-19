@@ -53,7 +53,6 @@ dependencies:
     - dash-bootstrap-components  # Bootstrap components for Dash
 
     # OpenEHR specific
-    - archetype_builder  # Tools for working with OpenEHR archetypes
     - lxml               # XML processing library
 
     # Development tools
