@@ -1,0 +1,66 @@
+# OpenEHR Bootcamp Conda Environment Configuration
+#
+# PURPOSE:
+# This file defines the Conda environment for the OpenEHR Bootcamp, including all
+# required dependencies for all modules. It creates a self-contained environment
+# with all the tools and libraries needed for the bootcamp projects.
+#
+# USAGE:
+# 1. Create the environment: conda env create -f environment.yml
+# 2. Activate the environment: conda activate openehr-bootcamp
+# 3. Update the environment (if needed): conda env update -f environment.yml
+#
+# STRUCTURE:
+# - name: The name of the Conda environment
+# - channels: Sources for packages (conda-forge has more up-to-date packages)
+# - dependencies: All required packages, including those installed via pip
+
+name: openehr-env
+channels:
+  - conda-forge  # Primary channel for most packages
+  - defaults     # Fallback channel
+
+dependencies:
+  # Core Python and Node.js
+  - python=3.11  # Specific Python version for compatibility
+  - pip          # Package installer for Python
+  - nodejs=18    # JavaScript runtime for web development
+  - npm          # Node package manager
+
+  # Data analysis and scientific computing
+  - jupyter      # Interactive notebooks for exploration
+  - requests     # HTTP library for API calls
+  - pandas       # Data manipulation and analysis
+  - matplotlib   # Basic plotting and visualization
+  - plotly       # Interactive visualizations
+  - dash         # Web application framework for dashboards
+
+  # Packages installed via pip
+  - pip:
+    # Core utilities
+    - python-dotenv     # Environment variable management
+    - httpx             # Modern HTTP client (async support)
+    - pytest            # Testing framework
+
+    # Web development
+    - fastapi           # Modern, fast web framework
+    - uvicorn           # ASGI server for FastAPI
+    - jinja2            # Template engine
+    - pydantic          # Data validation and settings management
+
+    # Data visualization
+    - streamlit         # Data apps framework
+    - dash-bootstrap-components  # Bootstrap components for Dash
+
+    # OpenEHR specific
+    - archetype_builder  # Tools for working with OpenEHR archetypes
+    - lxml               # XML processing library
+
+    # Development tools
+    - black              # Code formatter
+    - flake8             # Linter
+    - isort              # Import sorter
+
+    # Utilities
+    - tqdm               # Progress bars
+    - rich               # Rich text and formatting in terminal
