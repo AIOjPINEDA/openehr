@@ -6,6 +6,27 @@ The [openEHR Bootcamp by Medblocks](https://medblocks.com/openehr-bootcamp) is a
 
 ---
 
+## Prerequisites & Tools
+
+This course emphasizes hands-on development. You should have a foundational understanding of making HTTP requests and basic programming skills—especially using JavaScript for front-end development and Java for back-end processes. If you are new to these, use the following resources to get started:
+
+- **Postman:** Tool for testing and developing APIs.  
+  - [Postman Documentation](https://learning.postman.com/docs/getting-started/introduction/)
+  - [Postman Beginner's Course (freeCodeCamp)](https://www.postman.com/prasandhkishorep/postman-beginner-s-course-freecodecamp/overview)
+- **JavaScript:** Widely used for web development.  
+  - [JavaScript Tutorial (MDN)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide)
+  - [JavaScript Course (freeCodeCamp)](https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/)
+- **Svelte:** Front-end framework used in some bootcamp applications.  
+  - [Svelte YouTube Tutorial](https://www.youtube.com/watch?v=zojEMeQGGHs)
+- **Java:** Used for server-side applications and backend processes.  
+  - [Java Documentation (Oracle)](https://docs.oracle.com/en/java/)
+  - [Java Beginner's Tutorial (Telusko)](https://www.youtube.com/watch?v=eIrMbAQSU34)
+- **openEHR:**  
+  - [Official openEHR Documentation](https://specifications.openehr.org/)
+  - [openEHR Community Forums](https://discourse.openehr.org/)
+
+---
+
 ## Bootcamp Structure and Curriculum
 
 The curriculum is organized into five progressive modules, each lasting two weeks:
@@ -167,7 +188,13 @@ Upon successful completion of the bootcamp, participants receive a certificate o
 - **openEHR Discourse Forums:** [https://discourse.openehr.org/](https://discourse.openehr.org/)
 - **openEHR Wiki:** [https://wiki.openehr.org/](https://wiki.openehr.org/)
 - **openEHR@GitHub:** [https://github.com/openEHR](https://github.com/openEHR)
+- **Postman Documentation:** [https://learning.postman.com/docs/getting-started/introduction/](https://learning.postman.com/docs/getting-started/introduction/)
+- **JavaScript Tutorial (MDN):** [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide)
+- **JavaScript Course (freeCodeCamp):** [https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/](https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/)
+- **Svelte YouTube Tutorial:** [https://www.youtube.com/watch?v=zojEMeQGGHs](https://www.youtube.com/watch?v=zojEMeQGGHs)
+- **Java Documentation (Oracle):** [https://docs.oracle.com/en/java/](https://docs.oracle.com/en/java/)
+- **Java Beginner's Tutorial (Telusko):** [https://www.youtube.com/watch?v=eIrMbAQSU34](https://www.youtube.com/watch?v=eIrMbAQSU34)
 
 ---
 
-*This guide provides a consolidated reference for the openEHR Bootcamp, summarizing its curriculum, resources, tools, and best practices. For the most up-to-date materials and exercises, always refer to the official bootcamp repository and website.*
+*This guide provides a consolidated reference for the openEHR Bootcamp, summarizing its curriculum, prerequisites, resources, tools, and best practices. For the most up-to-date materials and exercises, always refer to the official bootcamp repository and website.*

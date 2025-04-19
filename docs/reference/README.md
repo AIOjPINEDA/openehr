@@ -1,19 +1,26 @@
-# Documentación de Referencia
+# Reference Documentation
 
-Esta carpeta contiene documentación de referencia para el bootcamp de OpenEHR, incluyendo conceptos clave, terminología y recursos.
+This directory contains reference materials and conceptual documentation for the OpenEHR Bootcamp.
 
-## Contenido
+## Contents
 
-- [Referencia del Bootcamp](bootcamp_reference.md) - Guía de referencia principal con conceptos clave de OpenEHR
-- [Glosario](glossary.md) - Definiciones de términos relacionados con OpenEHR
-- [Recursos](resources.md) - Lista de recursos adicionales y enlaces útiles
+- [Bootcamp Reference](bootcamp_reference.md) - Detailed information about the bootcamp structure and curriculum
+- [OpenEHR Glossary](glossary.md) - Definitions of key OpenEHR terms and concepts
+- [Resources](resources.md) - Comprehensive list of OpenEHR resources, tools, and references
 
-## Propósito
+## Purpose
 
-La documentación de referencia proporciona información conceptual y técnica que sirve como base para entender los temas del bootcamp. A diferencia de las guías prácticas, estos documentos están diseñados para consulta y no necesariamente para seguirlos paso a paso.
+The reference documentation provides:
 
-Utiliza estos documentos cuando:
-- Necesites aclarar conceptos específicos de OpenEHR
-- Busques definiciones de términos técnicos
-- Quieras profundizar en algún tema particular
-- Necesites enlaces a recursos externos adicionales
+- Conceptual explanations of OpenEHR principles
+- Terminology definitions
+- Structured information about the bootcamp
+- Links to external resources and tools
+
+This documentation serves as a knowledge base that you can refer to throughout your OpenEHR learning journey.
+
+Use these documents when:
+- You need to clarify specific OpenEHR concepts
+- You're looking for definitions of technical terms
+- You want to dive deeper into a particular topic
+- You need links to additional external resources

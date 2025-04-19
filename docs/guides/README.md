@@ -1,21 +1,29 @@
 # Guides and Tutorials
 
-This directory will contain practical guides and tutorials for working with OpenEHR.
+This directory contains practical guides and tutorials for working with OpenEHR.
 
 ## Contents
 
-Currently, this section is being developed. Future guides will include:
-
-- Step-by-step tutorials for each module
-- How-to guides for common OpenEHR tasks
-- Best practices for OpenEHR development
+- [Postman Guide](postman_guide.md) - Using Postman to interact with OpenEHR REST APIs
+- [Svelte Basics](svelte_basics.md) - Introduction to Svelte for OpenEHR applications
+- [Java OpenEHR Development](java_openehr.md) - Using Java to interact with OpenEHR systems
+- [EHRbase Setup](ehrbase_setup.md) - Setting up and configuring EHRbase
 
 ## Purpose
 
-The guides documentation will provide:
+The guides documentation provides:
 
 - Practical, task-oriented instructions
 - Walkthroughs of common workflows
 - Tips and best practices
 
-This section will grow as you progress through the bootcamp and develop more practical knowledge.
+These guides cover topics such as:
+
+- Setting up development tools and environments
+- Interacting with OpenEHR REST APIs
+- Frontend development with Svelte
+- Backend development with Java
+- Creating and editing archetypes
+- Building templates
+- Querying data with AQL
+- Developing applications with OpenEHR
