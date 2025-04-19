@@ -2,6 +2,24 @@
 
 This module covers the fundamentals of openEHR and guides me through creating my first openEHR template for capturing vital signs.
 
+## Assignment Specification
+
+A nurse wants to capture the patient's vital signs when they visit the hospital. Our task is to help by creating an appropriate openEHR template.
+
+### Requirements
+
+1. Model an openEHR template to capture basic vital signs including:
+   - Pulse
+   - BP (Blood Pressure)
+   - SpO2 (Oxygen Saturation)
+   - Height
+   - Weight
+
+2. The template ID should include your name.
+
+3. Post the openEHR template to the bootcamp's shared openEHR server.
+   - Base URL: [https://openehr-bootcamp.medblocks.com/ehrbase](https://openehr-bootcamp.medblocks.com/ehrbase)
+
 ## Learning Objectives
 
 - Understand the core principles and architecture of openEHR

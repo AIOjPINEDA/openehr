@@ -2,6 +2,18 @@
 
 This final module focuses on creating a dashboard application that aggregates and visualizes data from multiple templates, demonstrating the power of openEHR's data reuse capabilities.
 
+## Assignment Specification
+
+Use the shared openEHR Server hosted at: https://openehr-bootcamp.medblocks.com/ehrbase
+
+Build your application to display dashboards that use the EHR ID: 6adc37f8-fff8-4fe4-a988-327b9fe6d5ac
+
+1. Your dashboard is supposed to display vital signs of a specific patient
+2. Populate new vital sign entries for the patient using your vital signs template and form
+3. Your dashboard should have 2 modes:
+   - 3a. Display charts and tables for the patients to only show vital sign entries that came from your own template
+   - 3b. Display charts and tables for the patients to only show all vital signs
+
 ## Learning Objectives
 
 - Master Archetype Query Language (AQL) for complex data retrieval

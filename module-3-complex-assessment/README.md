@@ -2,6 +2,13 @@
 
 This module focuses on modeling a complex clinical assessment form using openEHR archetypes and templates. I'll learn how to break down real-world clinical forms into reusable components and create a comprehensive template.
 
+## Assignment Specification
+
+1. Model an openEHR template to capture all relevant fields in the "Gynaec OP Case Record.pdf" clinical form located in this module's directory (create new archetypes if necessary)
+2. Provide appropriate terminology bindings where needed
+3. The template ID should include your name
+4. Post the template to the shared openEHR server
+
 ## Learning Objectives
 
 - Learn how to analyze and break down complex clinical forms
@@ -33,20 +40,20 @@ This module focuses on modeling a complex clinical assessment form using openEHR
 
 ## Project: Clinical Assessment Form
 
-I'll model a complex clinical assessment form, such as:
-- A comprehensive mental health assessment
-- A diabetes management form
-- A pre-operative assessment checklist
+I'll model the complex clinical assessment form provided in this module:
+- "Gynaec OP Case Record.pdf" - A gynecological outpatient case record form
+
+This form contains various clinical data elements related to gynecological examinations and patient history that need to be properly modeled in openEHR.
 
 ### Implementation Steps
 
-1. Select a real-world clinical form to model
-2. Analyze the form and identify key clinical concepts
-3. Search for existing archetypes in the CKM
-4. Create new archetypes for concepts not covered by existing ones
-5. Design a template that combines these archetypes
-6. Validate the template against clinical requirements
-7. (Optional) Submit new archetypes to the international CKM
+1. Analyze the Gynaec OP Case Record form and identify key clinical concepts
+2. Search for existing archetypes in the CKM that match these concepts
+3. Create new archetypes for concepts not covered by existing ones
+4. Design a template that combines these archetypes
+5. Validate the template against the requirements in the original form
+6. Add appropriate terminology bindings where needed
+7. Post the completed template to the shared openEHR server
 
 ## Resources
 

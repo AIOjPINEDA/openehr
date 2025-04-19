@@ -2,6 +2,13 @@
 
 This module focuses on building a more advanced application for healthcare practitioners to capture complex clinical assessments using the template created in Module 3.
 
+## Assignment Specification
+
+1. Build a functional user interface for the template that you built in Module 3
+2. Your app should be able to create new compositions
+3. Your app should be able to list existing compositions
+4. Use the shared openEHR server!
+
 ## Learning Objectives
 
 - Learn how to handle complex compositions in a web application

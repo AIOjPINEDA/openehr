@@ -2,6 +2,17 @@
 
 This module guides me through building my first web application that interacts with an openEHR server, allowing patients to record their vital signs.
 
+## Assignment Specification
+
+Create an EHR ID manually. Your app should be able to do the following within this EHR ID:
+
+1. Create new compositions for your template
+2. List all compositions that exist for your template
+3. Allow the user to delete compositions
+4. Optional: Allow users to edit compositions
+
+You can build your application in any framework or technology of your choice as long as it works. Use the common bootcamp openEHR endpoint: https://openehr-bootcamp.medblocks.com/ehrbase
+
 ## Learning Objectives
 
 - Understand how to interact with an openEHR server via REST API
