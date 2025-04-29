@@ -65,8 +65,10 @@ To verify that your environment is correctly configured:
 # Make sure the environment is activated
 conda activate openehr-bootcamp
 
-# Run the verification script
-python verify_environment.py
+# Verify the installation
+python --version
+node --version
+npm --version
 ```
 
 ## Managing JavaScript Dependencies
