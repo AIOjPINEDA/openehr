@@ -1,0 +1,3 @@
+[submodule "openehr-bootcamp-original"]
+	path = openehr-bootcamp-original
+	url = https://github.com/medblocks/openehr-bootcamp.git
