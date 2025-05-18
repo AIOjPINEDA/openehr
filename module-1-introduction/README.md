@@ -75,6 +75,7 @@ A crucial part of this module is setting up your local openEHR server, EHRbase, 
 
 *   **[EHRbase Setup Guide for the Bootcamp](../../docs/guides/ehrbase_setup.md)**
 *   **[Postman Setup Guide for openEHR Bootcamp](../../docs/guides/postman_guide.md)**
+*   **[Archetype Designer (Modeling Tool):](../../docs/guides/archetype_designer_template_creation.md)** Learn how to use Archetype Designer for creating and managing archetypes and templates.
 
 Please follow these guides to get EHRbase up and running and Postman configured before proceeding with the module's assignments and API interactions.
 

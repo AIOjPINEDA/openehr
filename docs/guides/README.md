@@ -37,5 +37,6 @@ This section provides links to various guides that can help you with specific to
 *   [Svelte Basics](./svelte_basics.md) - A primer on Svelte for frontend development.
 *   [EHRbase Setup Guide for the Bootcamp](./ehrbase_setup.md) - Step-by-step guide to install and run EHRbase locally using Docker, as per the bootcamp's configuration.
 *   [Postman Setup Guide for openEHR Bootcamp](./postman_guide.md) - How to configure Postman by importing the necessary collection and environments for interacting with local and shared openEHR servers.
+*   [Archetype Designer and Template Creation Guide](./archetype_designer_template_creation.md) - Using Archetype Designer to create and export an operational template.
 
 Feel free to contribute or suggest new guides!
