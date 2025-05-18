@@ -27,3 +27,14 @@ These guides cover topics such as:
 - Building templates
 - Querying data with AQL
 - Developing applications with OpenEHR
+
+## Available Guides
+
+This section provides links to various guides that can help you with specific tools, technologies, or concepts relevant to the bootcamp.
+
+*   [Java and openEHR](./java_openehr.md) - Notes on using Java with openEHR.
+*   [Postman Guide](./postman_guide.md) - How to use Postman for testing openEHR APIs.
+*   [Svelte Basics](./svelte_basics.md) - A primer on Svelte for frontend development.
+*   [EHRbase Setup Guide for the Bootcamp](./ehrbase_setup.md) - Step-by-step guide to install and run EHRbase locally using Docker, as per the bootcamp's configuration.
+
+Feel free to contribute or suggest new guides!

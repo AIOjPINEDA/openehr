@@ -69,6 +69,14 @@ Create an openEHR template for a nurse to capture patient vital signs during a h
 - **Clinical Decision Support Tools**: Including GDL2 editors
 - **CDR Platforms**: Both open-source and commercial options
 
+## Development Environment Setup
+
+A crucial part of this module is setting up your local openEHR server, EHRbase. We have prepared a detailed guide to walk you through this process:
+
+*   **[EHRbase Setup Guide for the Bootcamp](../../docs/guides/ehrbase_setup.md)**
+
+Please follow this guide to get EHRbase up and running before proceeding with the module's assignments.
+
 ## Implementation Guide
 
 ### Step 1: Research Archetypes

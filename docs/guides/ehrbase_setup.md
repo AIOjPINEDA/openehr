@@ -1,188 +1,68 @@
-# EHRbase Setup Guide
+# EHRbase Setup Guide for the Bootcamp
 
-This guide provides step-by-step instructions for setting up EHRbase, an open-source clinical data repository based on the openEHR Reference Model.
+This guide provides step-by-step instructions to set up EHRbase locally using Docker for the openEHR bootcamp. EHRbase is an open-source openEHR server we will use throughout this course.
 
 ## Prerequisites
 
-- Docker and Docker Compose installed
-- 4GB+ RAM available for Docker
-- Git installed
-- Basic command line knowledge
+*   **Docker Desktop:** Ensure Docker Desktop is installed and running on your macOS. Download it from [Docker Hub](https://www.docker.com/products/docker-desktop/).
 
-## Quick Setup with Docker
+## Bootcamp Configuration Overview
 
-The fastest way to get EHRbase running is using Docker Compose:
+This bootcamp uses a specific, simplified Docker configuration for EHRbase to streamline the learning process. The necessary files are located in the `openehr-bootcamp-original/` directory within your project:
 
-```bash
-# Clone the EHRbase repository
-git clone https://github.com/ehrbase/ehrbase.git
-cd ehrbase
+1.  **`docker-compose.yaml`**:
+    *   Defines two services: `db` (PostgreSQL 16) and `ehrbase`.
+    *   Mounts an initialization script for the PostgreSQL database.
+    *   Exposes EHRbase on `http://localhost:8080`.
+2.  **`init.sql`**:
+    *   A SQL script that runs when the PostgreSQL container starts for the first time.
+    *   Creates the `ehrbase` database and user required by the EHRbase server for this bootcamp's configuration.
 
-# Start EHRbase using Docker Compose
-docker-compose up -d
-```
+**Important:** Use this provided setup. It's tailored for the bootcamp and differs from the generic `docker-compose.yml` found in the official EHRbase repository.
 
-This will start:
-- PostgreSQL database
-- EHRbase server
-- Swagger UI for API documentation
+## Local Setup Steps
 
-## Verifying the Installation
+1.  **Open Terminal:**
+    Use your preferred terminal application (e.g., VS Code integrated terminal, macOS Terminal).
 
-1. Check that containers are running:
-   ```bash
-   docker-compose ps
-   ```
+2.  **Navigate to Directory:**
+    Change to the `openehr-bootcamp-original/` directory:
+    ```zsh
+    cd "/Users/jaimepm/Library/Mobile Documents/com~apple~CloudDocs/Wiki/Data Science 🐍 /Learning Data Science/OpenEHR/openehr-bootcamp-original"
+    ```
 
-2. Access the Swagger UI:
-   - Open a browser and navigate to: http://localhost:8080/ehrbase/swagger-ui.html
-   - You should see the EHRbase API documentation
+3.  **Start Docker Containers:**
+    Run the following command to download images (if not present) and start the PostgreSQL and EHRbase containers:
+    ```zsh
+    docker-compose up -d
+    ```
+    *   The `-d` flag runs containers in detached mode (in the background). Omit `-d` to see live logs. If you run without `-d`, press `Ctrl + C` to stop.
 
-3. Test a basic API call:
-   ```bash
-   curl -X GET http://localhost:8080/ehrbase/status
-   ```
-   You should receive a JSON response with status information.
+4.  **Verify Setup:**
+    Allow a few moments for services to initialize.
+    *   **Docker Desktop:** Check the Docker Desktop application. You should see two running containers (e.g., `openehr-bootcamp-original-db-1`, `openehr-bootcamp-original-ehrbase-1`).
+    *   **EHRbase Status Page:** Open your web browser and navigate to `http://localhost:8080/ehrbase/`. You should see a status message (e.g., "EHRbase is running!").
+    *   **Swagger UI (API Docs):** Navigate to `http://localhost:8080/ehrbase/swagger-ui.html`. This interface lists all EHRbase REST API endpoints.
 
-## Configuration Options
+EHRbase is now running locally.
 
-### Basic Authentication
+## Stopping EHRbase
 
-To enable basic authentication:
+To stop the EHRbase and PostgreSQL containers:
 
-1. Edit the `docker-compose.yml` file:
-   ```yaml
-   services:
-     ehrbase:
-       environment:
-         SECURITY_AUTHTYPE: BASIC
-         SECURITY_AUTHUSER: ehrbase-user
-         SECURITY_AUTHPASSWORD: SuperSecretPassword
-   ```
-
-2. Restart the containers:
-   ```bash
-   docker-compose down
-   docker-compose up -d
-   ```
-
-### Persistent Storage
-
-By default, the PostgreSQL data is stored in a Docker volume. For production use, you may want to configure a persistent volume:
-
-1. Edit the `docker-compose.yml` file:
-   ```yaml
-   services:
-     ehrbase-db:
-       volumes:
-         - ./pgdata:/var/lib/postgresql/data
-   ```
-
-2. Restart the containers:
-   ```bash
-   docker-compose down
-   docker-compose up -d
-   ```
-
-## Advanced Setup
-
-### Manual Installation (Without Docker)
-
-For production environments or advanced configurations, you may want to install EHRbase manually:
-
-1. **Set up PostgreSQL**:
-   ```bash
-   # Install PostgreSQL
-   sudo apt-get install postgresql
-   
-   # Create database and user
-   sudo -u postgres psql
-   CREATE DATABASE ehrbase;
-   CREATE USER ehrbase WITH PASSWORD 'ehrbase';
-   GRANT ALL PRIVILEGES ON DATABASE ehrbase TO ehrbase;
-   \q
-   ```
-
-2. **Install Java**:
-   ```bash
-   sudo apt-get install openjdk-11-jdk
-   ```
-
-3. **Download and configure EHRbase**:
-   ```bash
-   # Download the latest release
-   wget https://github.com/ehrbase/ehrbase/releases/download/v0.18.3/ehrbase-0.18.3.jar
-   
-   # Create application.yml configuration
-   cat > application.yml << EOF
-   server:
-     port: 8080
-     servlet:
-       context-path: /ehrbase
-   
-   spring:
-     datasource:
-       url: jdbc:postgresql://localhost:5432/ehrbase
-       username: ehrbase
-       password: ehrbase
-       driver-class-name: org.postgresql.Driver
-   EOF
-   ```
-
-4. **Run EHRbase**:
-   ```bash
-   java -jar ehrbase-0.18.3.jar --spring.config.location=file:application.yml
-   ```
-
-### Configuring HTTPS
-
-For production environments, you should enable HTTPS:
-
-1. Generate a self-signed certificate (for testing only):
-   ```bash
-   keytool -genkeypair -alias ehrbase -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore ehrbase.p12 -validity 3650
-   ```
-
-2. Configure HTTPS in `application.yml`:
-   ```yaml
-   server:
-     port: 8443
-     ssl:
-       key-store: ehrbase.p12
-       key-store-password: your-password
-       key-store-type: PKCS12
-       key-alias: ehrbase
-   ```
-
-3. Run EHRbase with HTTPS:
-   ```bash
-   java -jar ehrbase-0.18.3.jar --spring.config.location=file:application.yml
-   ```
+1.  Ensure you are in the `openehr-bootcamp-original/` directory in your terminal.
+2.  Run:
+    ```zsh
+    docker-compose down
+    ```
+    This stops and removes the containers. Data in PostgreSQL will persist due to Docker volumes unless you explicitly remove them (e.g., `docker-compose down -v`).
 
 ## Troubleshooting
 
-### Common Issues
+*   **Port Conflicts:** If `8080` or `5432` are in use, `docker-compose` will fail. Stop the conflicting service or change the port mapping in `docker-compose.yaml` (e.g., `ports: - "8081:8080"` to access EHRbase on `http://localhost:8081`).
+*   **Image Download Issues:** Check your internet connection.
+*   **Database Initialization Errors:** Review logs from the `db` container (`docker logs <db_container_name>`). Ensure `init.sql` is correct.
 
-1. **Database connection errors**:
-   - Check PostgreSQL is running: `docker-compose ps` or `systemctl status postgresql`
-   - Verify database credentials in configuration
-   - Ensure PostgreSQL is accepting connections: `pg_isready -h localhost -p 5432`
+## Next Steps
 
-2. **Port conflicts**:
-   - Check if port 8080 is already in use: `netstat -tuln | grep 8080`
-   - Change the port in configuration if needed
-
-3. **Memory issues**:
-   - Increase Docker memory allocation
-   - Add Java memory options: `java -Xmx2g -jar ehrbase-0.18.3.jar`
-
-4. **Permission issues**:
-   - Check file permissions for configuration files
-   - Ensure Docker has proper permissions
-
-## References
-
-- [EHRbase Documentation](https://ehrbase.readthedocs.io/en/latest/)
-- [EHRbase GitHub Repository](https://github.com/ehrbase/ehrbase)
-- [Docker Documentation](https://docs.docker.com/)
-- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+With EHRbase running, you are ready to proceed with Module 1 activities, which will involve interacting with this openEHR server.
