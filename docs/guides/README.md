@@ -36,5 +36,6 @@ This section provides links to various guides that can help you with specific to
 *   [Postman Guide](./postman_guide.md) - How to use Postman for testing openEHR APIs.
 *   [Svelte Basics](./svelte_basics.md) - A primer on Svelte for frontend development.
 *   [EHRbase Setup Guide for the Bootcamp](./ehrbase_setup.md) - Step-by-step guide to install and run EHRbase locally using Docker, as per the bootcamp's configuration.
+*   [Postman Setup Guide for openEHR Bootcamp](./postman_guide.md) - How to configure Postman by importing the necessary collection and environments for interacting with local and shared openEHR servers.
 
 Feel free to contribute or suggest new guides!

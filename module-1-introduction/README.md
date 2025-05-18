@@ -71,11 +71,12 @@ Create an openEHR template for a nurse to capture patient vital signs during a h
 
 ## Development Environment Setup
 
-A crucial part of this module is setting up your local openEHR server, EHRbase. We have prepared a detailed guide to walk you through this process:
+A crucial part of this module is setting up your local openEHR server, EHRbase, and your API testing tool, Postman. We have prepared detailed guides to walk you through these processes:
 
 *   **[EHRbase Setup Guide for the Bootcamp](../../docs/guides/ehrbase_setup.md)**
+*   **[Postman Setup Guide for openEHR Bootcamp](../../docs/guides/postman_guide.md)**
 
-Please follow this guide to get EHRbase up and running before proceeding with the module's assignments.
+Please follow these guides to get EHRbase up and running and Postman configured before proceeding with the module's assignments and API interactions.
 
 ## Implementation Guide
 

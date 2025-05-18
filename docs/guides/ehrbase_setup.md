@@ -34,7 +34,7 @@ This bootcamp uses a specific, simplified Docker configuration for EHRbase to st
 3.  **Start Docker Containers:**
     Run the following command to download images (if not present) and start the PostgreSQL and EHRbase containers:
     ```zsh
-    docker-compose up -d
+    docker compose up -d
     ```
     *   The `-d` flag runs containers in detached mode (in the background). Omit `-d` to see live logs. If you run without `-d`, press `Ctrl + C` to stop.
 
