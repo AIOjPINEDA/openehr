@@ -67,9 +67,34 @@ The curriculum is organized into five progressive modules, each lasting two week
 
 ### Core openEHR Tools
 
-- **EHRbase:** Open-source openEHR server for storing and querying clinical data ([EHRbase](https://ehrbase.org/))
+- **EHRbase:** Open-source openEHR server for storing and querying clinical data ([EHRbase](https://ehrbase.org/)).
+  - The bootcamp primarily uses a local Docker-based setup for EHRbase (see `docs/guides/ehrbase_setup.md`).
 - **Archetype Designer:** Tool for creating and editing openEHR archetypes ([Archetype Designer](https://tools.openehr.org/designer))
 - **Clinical Knowledge Manager (CKM):** Repository of community-validated archetypes and templates ([openEHR CKM](https://ckm.openehr.org/ckm/))
+
+### Advanced EHRbase Deployment: Cloud Hosting with Authentication
+
+While the bootcamp focuses on a local EHRbase setup for development and learning, deploying EHRbase to a cloud environment for broader access or production-like scenarios involves additional considerations, particularly around security and accessibility.
+
+The article "[Host An Authenticated EHRbase Server In The Cloud In Under 15 Mins](https://medblocks.com/blog/host-an-authenticated-ehrbase-server-in-the-cloud-in-under-15-mins#introduction)" by Medblocks provides a comprehensive guide for such a setup. Key aspects covered include:
+
+*   **Cloud VPS Setup:** Using a Virtual Private Server (e.g., on AWS, Azure, GCP) with Ubuntu/Debian.
+*   **Docker and Docker Compose:** As the foundation for deploying EHRbase and its dependencies.
+*   **HTTPS/SSL with Traefik:** Implementing Traefik as a reverse proxy to manage SSL certificates (e.g., from Let's Encrypt) for secure HTTPS communication. This is crucial for protecting data in transit when EHRbase is exposed to the internet.
+*   **Basic Authentication:** Configuring EHRbase for Basic Authentication (`SECURITY_AUTHTYPE: BASIC`) to control access to the server.
+*   **Enhanced `docker-compose.yaml`:** The article provides a `docker-compose.yaml` that includes services for `postgres`, `ehrbase`, and `traefik`. It demonstrates:
+    *   Persistent data volumes for PostgreSQL.
+    *   Environment variables for database credentials and EHRbase security settings.
+    *   CORS (Cross-Origin Resource Sharing) configuration.
+*   **Comprehensive `init.sql`:** A more detailed PostgreSQL initialization script that sets up specific user roles, permissions, and database extensions suitable for a more robust deployment.
+
+**Key Differences from Bootcamp Local Setup:**
+
+*   **Security:** The cloud setup explicitly adds layers of security (HTTPS, Basic Authentication) not typically configured in the simplified local development environment.
+*   **Accessibility:** Designed for access over the internet, requiring DNS configuration and a reverse proxy.
+*   **Complexity:** The `docker-compose.yaml` and `init.sql` are more complex to handle the requirements of a public-facing, authenticated service.
+
+This Medblocks article serves as an excellent reference for those looking to understand or implement a more production-ready EHRbase deployment. For the bootcamp's direct exercises, the local setup guide (`docs/guides/ehrbase_setup.md`) remains the primary reference.
 
 ### Integration and Automation
 
