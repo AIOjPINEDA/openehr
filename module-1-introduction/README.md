@@ -182,6 +182,7 @@ These archetypes can be found in the Clinical Knowledge Manager (CKM) after logg
 ### Tutorials
 - [What is openEHR and How Do I use it?](https://www.youtube.com/watch?v=Zn4Muj2IOlM) (YouTube)
 - [openEHR step by step tutorial](https://www.youtube.com/watch?v=mqV6QQ-aaDA) (YouTube)
+- [Module 1 Tutorials](./module-1-tutorials.md)
 
 ## Next Steps
 After completing this module, proceed to [Module 2: Building My First openEHR App](../module-2-first-app/README.md) where you'll create a web application that uses this template.
