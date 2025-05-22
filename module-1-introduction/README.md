@@ -183,6 +183,9 @@ These archetypes can be found in the Clinical Knowledge Manager (CKM) after logg
 - [What is openEHR and How Do I use it?](https://www.youtube.com/watch?v=Zn4Muj2IOlM) (YouTube)
 - [openEHR step by step tutorial](https://www.youtube.com/watch?v=mqV6QQ-aaDA) (YouTube)
 - [Module 1 Tutorials](./module-1-tutorials.md)
+*   [1.2: Reference Model, Archetypes, and Templates](./module-1-02-refence-model-archetypes-templates.md) - Understanding the core building blocks of openEHR.
+*   [1.3: Creating Your First Template - Vital Signs](./module-1-03-creating-a-template-vital-signs.md) - Hands-on guide to creating a template in Archetype Designer.
+*   [1.4: The openEHR Template API - Uploading Your First Template](./module-1-04-openehr-template-api.md) - Using Postman to upload your OPT to EHRbase.
 
 ## Next Steps
 After completing this module, proceed to [Module 2: Building My First openEHR App](../module-2-first-app/README.md) where you'll create a web application that uses this template.
