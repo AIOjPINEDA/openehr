@@ -5,6 +5,7 @@ This module guides me through building my first web application that interacts w
 ## Module Documentation
 
 - **[Module 2 Kickoff Summary](./module-2-00-kickoff-summary.md)** - Comprehensive overview of assignment requirements, conceptual framework, and technical guidance
+- **[Creating Compositions via API](./module-2-01-creating-compositions-api.md)** - Step-by-step guide for creating EHRs and compositions using OpenEHR REST API
 
 ## Assignment Specification
 

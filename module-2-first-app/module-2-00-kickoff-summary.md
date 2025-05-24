@@ -36,7 +36,6 @@ Your application must implement the following functionality:
 - Vital Signs template from Module 1 must be available on the server
 
 ## 2. Conceptual Framework: Template, EHR, and Composition
-
 Understanding these three core concepts is essential for building OpenEHR applications.
 
 ### Template: The Unfilled Form
@@ -54,6 +53,7 @@ Understanding these three core concepts is essential for building OpenEHR applic
   - One EHR per patient
   - Contains multiple compositions
   - Persistent patient identifier
+![alt text](https://specifications.openehr.org/releases/RM/latest/ehr/diagrams/high_level_ehr_structure.svg)
 
 ### Composition: The Filled Form
 - **Real-world analogy**: Completed form with doctor's handwriting
@@ -62,6 +62,8 @@ Understanding these three core concepts is essential for building OpenEHR applic
   - Always belongs to an EHR
   - Always based on a template
   - Contains real clinical observations
+
+![alt text](https://specifications.openehr.org/releases/BASE/latest/architecture_overview/diagrams/composition_structure.png)
 
 ### Relationship Hierarchy
 ```
@@ -131,6 +133,19 @@ When examining the example composition, look for:
 - **Data types**: Understand numeric values, units, timestamps
 - **Metadata**: Composition context, language, territory
 
+## 4. Creating Compositions via API
+
+For detailed step-by-step instructions on creating your first composition, see the dedicated guide:
+**[Creating Compositions via OpenEHR API](./module-2-01-creating-compositions-api.md)**
+
+This guide covers:
+- Creating EHR records (patient containers)
+- Preparing and customizing composition data
+- Submitting compositions via REST API
+- Verifying successful creation
+- Common issues and troubleshooting
+- Next steps for building your application
+
 ## 5. Development Strategy
 
 ### Recommended Approach
@@ -158,10 +173,11 @@ Your application will be evaluated on:
 ## 7. Next Steps
 
 1. **Review Module 1 Template**: Ensure your Vital Signs template is properly deployed
-2. **Set Up Development Environment**: Configure your chosen technology stack
-3. **Explore API Endpoints**: Use Postman to understand OpenEHR REST APIs
-4. **Plan Application Architecture**: Design your application structure
-5. **Start Implementation**: Begin with basic composition creation
+2. **Create Your First Composition**: Follow the **[Creating Compositions via API guide](./module-2-01-creating-compositions-api.md)** to create an EHR and post your first composition
+3. **Set Up Development Environment**: Configure your chosen technology stack
+4. **Explore API Endpoints**: Use Postman to understand OpenEHR REST APIs beyond composition creation
+5. **Plan Application Architecture**: Design your application structure
+6. **Start Implementation**: Begin building your application with the composition creation workflow
 
 *For deeper architectural understanding, refer to the official OpenEHR specifications linked in the Additional Learning Resources section.*
 
