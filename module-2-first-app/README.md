@@ -2,6 +2,10 @@
 
 This module guides me through building my first web application that interacts with an openEHR server, allowing patients to record their vital signs.
 
+## Module Documentation
+
+- **[Module 2 Kickoff Summary](./module-2-00-kickoff-summary.md)** - Comprehensive overview of assignment requirements, conceptual framework, and technical guidance
+
 ## Assignment Specification
 
 Create an EHR ID manually. Your app should be able to do the following within this EHR ID:
