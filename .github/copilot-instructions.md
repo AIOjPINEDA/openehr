@@ -167,6 +167,11 @@
 - API usage examples in Postman collection format
 - Architecture decisions recorded in `/docs/` directory
 - Progress tracking in module-specific markdown files
+- **Mermaid Diagrams**:
+    - When creating Mermaid diagrams (e.g., flowcharts, sequence diagrams) for documentation:
+        - Ensure all node labels and edge labels containing special characters (e.g., `::`, `/`, `<br>`, `#`, `-`, `.`, `!`, `(`, `)`) or newlines are enclosed in double quotes (`"`) to prevent parsing errors. Example: `A["Node with :: special chars"] -->|"Edge label with / slash"| B["Another Node<br>with newline"];`
+        - Avoid starting node text with patterns that Mermaid might misinterpret as lists (e.g., `1. Text`). Instead, use phrasing like `Step 1: Text`.
+        - For better readability and theme compatibility, prefer relying on default Mermaid/theme fill colors for nodes. If custom styling is necessary, prioritize changing stroke (border) colors or using `classDef` sparingly, ensuring high contrast with text.
 
 ## Key Reference Materials and Documentation
 

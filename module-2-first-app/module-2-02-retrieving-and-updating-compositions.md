@@ -1,8 +1,56 @@
-# Module 2: Retrieving, Updating, and Versioning Compositions
+# Module 2: Managing Compositions: Retrieval, Updates, Versioning, and Deletion
 
-This guide explains how to retrieve and update openEHR compositions using the EHRbase REST API, typically via a tool like Postman, as demonstrated in the bootcamp.
+## Visual Summary: Composition Management Flowchart
 
-## 1. Retrieving Compositions
+```mermaid
+graph TD
+    A["Start: Need to record/manage clinical data"] --> B{"Desired Operation?"};
+
+    B --> C["Create New Composition"];
+    C -- "POST /ehr/{ehr_id}/composition" --> D["Composition Created<br>(Receives v1: UUID::System::1)"];
+
+    B --> E["Retrieve Composition"];
+    E --> F{"Which version?"};
+    F -- "Latest" --> G["GET /ehr/{ehr_id}/composition/{uuid}<br>Retrieves latest active version"];
+    F -- "Specific" --> H["GET /ehr/{ehr_id}/composition/{uuid::system::N}<br>Retrieves specific version N"];
+
+    B --> I["Update Existing Composition"];
+    I -- "Step 1: Get 'versioned_object_id' (e.g., v1) of the version to update" --> J["Step 2: Prepare modified data"];
+    J -- "Step 3: PUT /ehr/{ehr_id}/composition/{uuid} <br>Header: If-Match: v1 (UUID::System::1)" --> K["Composition Updated<br>(Receives v2: UUID::System::2)"];
+    K --> D_Update["New Version Created (v2)"];
+
+    B --> L["Delete Composition"];
+    L -- "Step 1: Get 'versioned_object_id' (e.g., vN) of the LATEST version" --> M["Step 2: DELETE /ehr/{ehr_id}/composition/{full_vN_id}"];
+    M --> N["Composition Logically Deleted<br>(Response 204 No Content)"];
+    N --> O["Version vN may still be accessible by direct ID<br>Will not appear in general queries"];
+
+    D --> E;
+    D_Update --> E;
+    G --> I;
+    H --> I;
+    G --> L;
+
+    subgraph ID_Legend
+        direction LR
+        id1["uuid: Base object identifier"]
+        id2["versioned_object_id: uuid::system::version_number"]
+        id3["ehr_id: Electronic Health Record ID"]
+    end
+
+    %% Removed custom fill colors for better default contrast
+    classDef operation stroke:#333,stroke-width:2px;
+    classDef result stroke:#333,stroke-width:2px;
+    classDef decision stroke:#333,stroke-width:2px;
+
+    class A,B,F,E,I,L decision;
+    class C,J,M operation;
+    class D,K,N,G,H,O result;
+    class D_Update result;
+```
+
+This guide explains how to retrieve, update, manage versions of, and delete openEHR compositions using the EHRbase REST API, typically via a tool like Postman, as demonstrated in the bootcamp.
+
+## 1. Retrieving Compositions (Latest Version)
 
 After a composition has been created (as covered in `module-2-01-creating-compositions-api.md`), you can retrieve it using its unique identifier.
 
@@ -15,11 +63,11 @@ After a composition has been created (as covered in `module-2-01-creating-compos
     3.  **Version Number**: An integer indicating the version of the composition (e.g., `1`, `2`).
     The full `versioned_object_id` looks like: `[UUID]::[Creating System ID]::[Version]`.
 
-### API Endpoint for Retrieval:
+### API Endpoint for Retrieving the Latest Version:
 
 *   `GET /rest/openehr/v1/ehr/{ehr_id}/composition/{composition_uid}`
     *   `{ehr_id}`: The ID of the EHR containing the composition.
-    *   `{composition_uid}`: The UUID part of the composition's `versioned_object_id`.
+    *   `{composition_uid}`: The UUID part (the object ID itself, not the full versioned ID) of the composition's `versioned_object_id`.
 
 ### Steps to Retrieve a Composition (e.g., in Postman):
 
@@ -36,7 +84,7 @@ After a composition has been created (as covered in `module-2-01-creating-compos
     The system stores the data in a standard openEHR format, and these are just different serialization options. You are not losing data by posting in one format and retrieving in another.
 
 **Example**:
-If you posted a composition and got back `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx::local.ehrbase.org::1`, you would use `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` as the `{composition_uid}` in the GET request.
+If you posted a composition and got `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx::local.ehrbase.org::1`, you would use `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` as the `{composition_uid}` in the GET request.
 
 ## 2. Updating Compositions
 
@@ -87,17 +135,17 @@ Existing compositions can be updated. OpenEHR handles this by creating a new ver
 5.  Upon success, EHRbase creates a new version. If you retrieve `abc-123` again, you'll get version 2, and its `versioned_object_id` will be `abc-123::local.ehrbase.org::2`.
 6.  If you want to update it again, your next `PUT` request's `If-Match` header must be `abc-123::local.ehrbase.org::2`.
 
-## 3. Retrieving Specific Versions
+## 3. Retrieving Specific Historical Versions
 
-You can retrieve a specific version of a composition if you know its full `versioned_object_id`. This is useful for viewing the history of changes.
+You can retrieve a specific historical version of a composition if you know its full `versioned_object_id`. This is useful for viewing the history of changes.
 
-#### API Endpoint for Retrieving a Specific Version:
+### API Endpoint for Retrieving a Specific Version:
 
 *   `GET /rest/openehr/v1/ehr/{ehr_id}/composition/{versioned_composition_id}`
     *   `{ehr_id}`: The ID of the EHR.
     *   `{versioned_composition_id}`: This is the **full** versioned ID of the composition, including the UUID, creating system, and version number (e.g., `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx::local.ehrbase.org::1`).
 
-#### Steps to Retrieve a Specific Version:
+### Steps to Retrieve a Specific Version:
 
 1.  **Identify the `versioned_object_id`**: You need the complete `versioned_object_id` of the specific version you want to retrieve. For example, if you updated a composition from version 1 to version 2, and then to version 3, you can retrieve version 1, 2, or 3 by using their respective full `versioned_object_id`s.
 2.  **Set up the GET Request**:
@@ -110,11 +158,37 @@ To retrieve version 1 of a composition whose `versioned_object_id` is `abc-123::
 
 This allows you to access the historical state of the composition. All versions are preserved in the system by default, providing a full audit trail of changes.
 
-**When to Update vs. Create New Compositions**:
+## 4. Deleting Compositions
 
-*   **Updating existing compositions** is generally used for correcting errors or for specific use cases like managing a "living" document (e.g., a medication list that is always current).
-*   **Creating new compositions** is the more common pattern for recording new clinical events or encounters (e.g., a new vital signs observation, a new consultation note). This reflects the chronological nature of most health records.
+Compositions can be deleted from the EHR. The openEHR REST API specifies deletion using the `preceding_version_uid`.
 
-The system maintains a full history regardless, so you don't lose data. The choice depends on the clinical workflow and data modeling decisions for the specific template.
+### Key Concepts for Deletion:
 
-This documentation should help you understand the processes of retrieving, updating, and managing versions of compositions as discussed in the bootcamp sessions.
+*   **Preceding Version UID**: To delete a composition, you MUST provide the complete `versioned_object_id` of the *latest existing version* of the composition.
+*   **Effect of Deletion**: After deletion, the composition will no longer be retrievable through queries that fetch the latest version (e.g., AQL queries or GET requests using only the base UUID). However, the specific version that was marked for deletion (and potentially its history) might still be accessible if queried directly by its full `versioned_object_id`, though it's effectively removed from the active record.
+
+### API Endpoint for Deletion:
+
+*   `DELETE /rest/openehr/v1/ehr/{ehr_id}/composition/{preceding_version_uid}`
+    *   `{ehr_id}`: The ID of the EHR.
+    *   `{preceding_version_uid}`: The **full** `versioned_object_id` of the latest version of the composition to be deleted (e.g., `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx::local.ehrbase.org::3`).
+
+### Steps to Delete a Composition (e.g., in Postman):
+
+1.  **Identify the `versioned_object_id` of the Latest Version**: Ensure you have the complete `versioned_object_id` of the most recent version of the composition you intend to delete. If the composition is at version 3, you need the versioned ID for version 3.
+2.  **Set up the DELETE Request**:
+    *   Method: `DELETE`
+    *   URL: `https://openehr-bootcamp.medblocks.com/ehrbase/rest/openehr/v1/ehr/{your_ehr_id}/composition/{full_versioned_object_id_of_latest_version}`
+    *   Headers: No specific `Content-Type` or `If-Match` is typically required for the DELETE operation itself, but ensure your Postman setup or client sends appropriate default headers if needed.
+3.  **Execute the Request**:
+    *   A successful deletion will typically return a `204 No Content` status.
+
+**Behavior After Deletion**:
+
+*   If you attempt to `GET` the composition using just its base UUID (e.g., `/rest/openehr/v1/ehr/{ehr_id}/composition/{uuid}`), you should receive a `204 No Content` or a `404 Not Found`, indicating it's no longer considered an active/latest composition.
+*   AQL queries will generally no longer return this deleted composition.
+*   As per the transcript, attempting to `GET` the specific `versioned_object_id` that was deleted might still return that version's data, but it's logically deleted from the main record.
+
+**Important Note on Deletion vs. Audit**: While the API allows deletion, in many healthcare scenarios, true deletion is discouraged. Instead, compositions might be marked as erroneous or amended, preserving the full audit trail. The openEHR specification supports robust versioning, which is key for this. Deletion should be used with caution and understanding of its implications on data integrity and auditability.
+
+This documentation should help you understand the processes of retrieving, updating, managing versions of, and deleting compositions as discussed in the bootcamp sessions.
