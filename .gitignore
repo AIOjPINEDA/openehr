@@ -17,6 +17,10 @@ coverage
 *.lcov
 .nyc_output
 
+# Backup files
+*-backup.md
+copilot-instructions-backup.md
+
 # Build outputs
 dist
 dist-ssr
