@@ -1,4 +1,4 @@
-# Module 2: Retrieving and Updating Compositions
+# Module 2: Retrieving, Updating, and Versioning Compositions
 
 This guide explains how to retrieve and update openEHR compositions using the EHRbase REST API, typically via a tool like Postman, as demonstrated in the bootcamp.
 
@@ -87,13 +87,34 @@ Existing compositions can be updated. OpenEHR handles this by creating a new ver
 5.  Upon success, EHRbase creates a new version. If you retrieve `abc-123` again, you'll get version 2, and its `versioned_object_id` will be `abc-123::local.ehrbase.org::2`.
 6.  If you want to update it again, your next `PUT` request's `If-Match` header must be `abc-123::local.ehrbase.org::2`.
 
-### Retrieving Specific Versions
+## 3. Retrieving Specific Versions
 
-You can retrieve a specific version of a composition if you know its full `versioned_object_id`.
+You can retrieve a specific version of a composition if you know its full `versioned_object_id`. This is useful for viewing the history of changes.
+
+#### API Endpoint for Retrieving a Specific Version:
 
 *   `GET /rest/openehr/v1/ehr/{ehr_id}/composition/{versioned_composition_id}`
-    *   Note: Here, `{versioned_composition_id}` is the full versioned ID, including `::SYSTEM::VERSION`.
+    *   `{ehr_id}`: The ID of the EHR.
+    *   `{versioned_composition_id}`: This is the **full** versioned ID of the composition, including the UUID, creating system, and version number (e.g., `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx::local.ehrbase.org::1`).
 
-This allows you to access the historical state of the composition. All versions are preserved in the system.
+#### Steps to Retrieve a Specific Version:
 
-This documentation should help you understand the processes of retrieving and updating compositions as discussed in the bootcamp session.
+1.  **Identify the `versioned_object_id`**: You need the complete `versioned_object_id` of the specific version you want to retrieve. For example, if you updated a composition from version 1 to version 2, and then to version 3, you can retrieve version 1, 2, or 3 by using their respective full `versioned_object_id`s.
+2.  **Set up the GET Request**:
+    *   Method: `GET`
+    *   URL: `https://openehr-bootcamp.medblocks.com/ehrbase/rest/openehr/v1/ehr/{your_ehr_id}/composition/{full_versioned_composition_id_from_step_1}`
+    *   Headers: Specify the `Accept` header for the desired format (e.g., `application/openehr.wt.flat+json`, `application/json`).
+
+**Example**:
+To retrieve version 1 of a composition whose `versioned_object_id` is `abc-123::local.ehrbase.org::1`, you would use that full string as the `{versioned_composition_id}` in the GET request. To get version 2 (`abc-123::local.ehrbase.org::2`), you would use that specific versioned ID.
+
+This allows you to access the historical state of the composition. All versions are preserved in the system by default, providing a full audit trail of changes.
+
+**When to Update vs. Create New Compositions**:
+
+*   **Updating existing compositions** is generally used for correcting errors or for specific use cases like managing a "living" document (e.g., a medication list that is always current).
+*   **Creating new compositions** is the more common pattern for recording new clinical events or encounters (e.g., a new vital signs observation, a new consultation note). This reflects the chronological nature of most health records.
+
+The system maintains a full history regardless, so you don't lose data. The choice depends on the clinical workflow and data modeling decisions for the specific template.
+
+This documentation should help you understand the processes of retrieving, updating, and managing versions of compositions as discussed in the bootcamp sessions.
