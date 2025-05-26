@@ -78,6 +78,7 @@ Once an EHR exists, you can post clinical compositions to it. This example uses 
     - `Prefer: return=representation` (Instructs the server to return the full created composition in the response. Use `return=minimal` for just a confirmation, which is often better in production but less informative during development.)
 - **Body**: The full composition data in canonical JSON format, based on your template (e.g., `JaimePM_vital_signs.v0.opt`).
     - Key fields to customize in your JSON body: composer name, context times, and actual clinical values.
+    - **Note on Content Types**: While this guide focuses on `Content-Type: application/json` (for canonical JSON, where the template ID is *within* the composition), if you were to post compositions using Web Template-derived formats (e.g., `application/openehr.wt.flat+json`), you would also need to include a `templateId` query parameter in the endpoint URL (e.g., `POST /rest/openehr/v1/ehr/{ehr_id}/composition?templateId=your_template_id`). The Postman collection may demonstrate this for specific request types.
 - **Success Response (201 Created)**:
     - The server returns the full composition, now including system-assigned UIDs.
     - **Key values to note from the response headers or body**:
@@ -148,7 +149,8 @@ Deleting a composition also requires optimistic locking via the `If-Match` heade
 
 - **`Content-Type: application/json`**: Specifies that the request body (for POST, PUT) is in JSON format. Essential.
 - **`Accept: application/json`**: Informs the server that the client expects the response in JSON format. Essential.
-- **`If-Match: {version_uid}`**: Used for optimistic concurrency control in `PUT` and `DELETE` operations. It ensures that the operation is performed only if the client's version of the resource matches the server's current version, preventing lost updates or accidental deletions on stale data. The value is the `version_uid` of the composition version being targeted for update/delete.
+While the openEHR REST API supports various content types (e.g., XML, different JSON flavors like Flat or Structured derived from Web Templates), this bootcamp primarily focuses on `application/json` for canonical JSON exchanges. The `Content-Type` and `Accept` headers are crucial for negotiating these formats with the server if you explore alternatives.
+- **`If-Match: {version_uid}`**: Used for optimistic concurrency control in `PUT` and `DELETE` operations. It ensures that the operation is performed only if the client\'s version of the resource matches the server\'s current version, preventing lost updates or accidental deletions on stale data. The value is the `version_uid` of the composition version being targeted for update/delete.
 - **`Prefer: return=representation | return=minimal`**:
     - `return=representation`: Requests the server to return the full resource representation after a successful `POST` or `PUT`. Useful during development and learning.
     - `return=minimal`: Requests minimal confirmation (e.g., just headers or a success status). More efficient for production.

@@ -240,3 +240,14 @@ When providing information or assistance, prioritize these official sources alig
 - Escalate to community forums for edge cases or advanced scenarios
 
 This ensures all guidance aligns with the structured learning path and authoritative sources used throughout the bootcamp curriculum.
+
+## Key Reference for openEHR API Calls
+
+When assisting with tasks involving openEHR REST API calls, understanding API query syntax, or interpreting API-related discussions (e.g., from transcripts):
+
+- **Primary Source of Truth for API Calls**: The Postman collection and environment files are the definitive reference for correct API endpoint paths, request structures, headers, and example payloads used in this bootcamp. These files should be consulted to ensure accuracy, especially when information from other sources like audio transcripts might be ambiguous regarding precise syntax.
+- **File Locations**:
+    - Main Collection: `openehr-bootcamp-original/postman/openEHR APIs.postman_collection.json`
+    - Shared Environment: `openehr-bootcamp-original/postman/Bootcamp shared.postman_environment.json`
+    - Local Environment: `openehr-bootcamp-original/postman/openEHR Local.postman_environment.json`
+- **Usage**: Prioritize information from these Postman files for verifying API call syntax and parameters. They reflect the practical implementation and examples taught in the bootcamp.
