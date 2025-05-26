@@ -1,194 +1,179 @@
-# Module 2: Managing Compositions: Retrieval, Updates, Versioning, and Deletion
+# Module 2: Managing EHR Compositions (CRUD & Versioning)
 
-## Visual Summary: Composition Management Flowchart
+This guide provides a comprehensive overview of creating, retrieving, updating, deleting (CRUD), and versioning openEHR compositions using the REST API. It aligns with the practical exercises in Module 2 and the bootcamp's Postman collection.
+
+## Visual Summary: Composition Management Workflow
 
 ```mermaid
 graph TD
-    A["Start: Need to record/manage clinical data"] --> B{"Desired Operation?"};
+    A["Start: Have EHR ID & Template"] --> B{Create or Manage Existing Composition?};
+    B -- Create New --> CREATE_OP["POST /ehr/{ehr_id}/composition<br>Prefer: return=representation"];
+    CREATE_OP --> STORE_UIDS["Store ehr_id, composition_uid (versioned), version_uid (of new version)"];
+    STORE_UIDS --> F["View/Verify Created Composition Data"];
 
-    B --> C["Create New Composition"];
-    C -- "POST /ehr/{ehr_id}/composition" --> D["Composition Created<br>(Receives v1: UUID::System::1)"];
+    B -- Manage Existing --> C["Select Operation on Existing Composition<br>(Need composition_uid & latest version_uid)"];
+    C --> D["Retrieve Latest Version"];
+    D --> E["GET /ehr/{ehr_id}/composition/{composition_uid}"];
+    E --> F;
 
-    B --> E["Retrieve Composition"];
-    E --> F{"Which version?"};
-    F -- "Latest" --> G["GET /ehr/{ehr_id}/composition/{uuid}<br>Retrieves latest active version"];
-    F -- "Specific" --> H["GET /ehr/{ehr_id}/composition/{uuid::system::N}<br>Retrieves specific version N"];
+    C --> G["Update"];
+    G --> H["PUT /ehr/{ehr_id}/composition/{composition_uid}<br>If-Match: {current_latest_version_uid}<br>Prefer: return=representation"];
+    H --> I["Store New Version UID"];
+    I --> F;
 
-    B --> I["Update Existing Composition"];
-    I -- "Step 1: Get 'versioned_object_id' (e.g., v1) of the version to update" --> J["Step 2: Prepare modified data"];
-    J -- "Step 3: PUT /ehr/{ehr_id}/composition/{uuid} <br>Header: If-Match: v1 (UUID::System::1)" --> K["Composition Updated<br>(Receives v2: UUID::System::2)"];
-    K --> D_Update["New Version Created (v2)"];
+    C --> J["Retrieve Specific Version"];
+    J --> K["GET /ehr/{ehr_id}/composition/{specific_version_uid}"];
+    K --> F;
 
-    B --> L["Delete Composition"];
-    L -- "Step 1: Get 'versioned_object_id' (e.g., vN) of the LATEST version" --> M["Step 2: DELETE /ehr/{ehr_id}/composition/{full_vN_id}"];
-    M --> N["Composition Logically Deleted<br>(Response 204 No Content)"];
-    N --> O["Version vN may still be accessible by direct ID<br>Will not appear in general queries"];
+    C --> L["Delete"];
+    L --> M["DELETE /ehr/{ehr_id}/composition/{composition_uid}<br>If-Match: {current_latest_version_uid}"];
+    M --> N["Composition Deleted"];
 
-    D --> E;
-    D_Update --> E;
-    G --> I;
-    H --> I;
-    G --> L;
-
-    subgraph ID_Legend
-        direction LR
-        id1["uuid: Base object identifier"]
-        id2["versioned_object_id: uuid::system::version_number"]
-        id3["ehr_id: Electronic Health Record ID"]
-    end
-
-    %% Removed custom fill colors for better default contrast
-    classDef operation stroke:#333,stroke-width:2px;
-    classDef result stroke:#333,stroke-width:2px;
-    classDef decision stroke:#333,stroke-width:2px;
-
-    class A,B,F,E,I,L decision;
-    class C,J,M operation;
-    class D,K,N,G,H,O result;
-    class D_Update result;
+    F --> END_OP["Continue to other operations or End"];
+    N --> END_OP;
+    END_OP --> C;
+    END_OP --> B;
 ```
 
-This guide explains how to retrieve, update, manage versions of, and delete openEHR compositions using the EHRbase REST API, typically via a tool like Postman, as demonstrated in the bootcamp.
+## Introduction
 
-## 1. Retrieving Compositions (Latest Version)
+Managing clinical data often involves the full lifecycle of operations on a composition. This includes creating new entries, reading existing ones, updating them with new information, and occasionally deleting them. OpenEHR provides robust mechanisms for these operations, including strong version control.
 
-After a composition has been created (as covered in `module-2-01-creating-compositions-api.md`), you can retrieve it using its unique identifier.
+**Core Principle for Module 2**: Focus on the practical mechanics. If you can perform an operation in Postman using the bootcamp collection, you have the blueprint for your Svelte application. The official API specifications are for deeper understanding when needed.
 
-### Key Concepts:
+## Step 0: Prerequisite - Creating an EHR
 
-*   **Composition UID**: When a composition is successfully posted to the EHRbase server, the response includes a `uid` (or `versioned_object_id` for the specific version). This UID is crucial for retrieving or updating the composition.
-*   **Versioned Object ID**: This ID has three parts:
-    1.  **Object ID (UUID)**: The unique identifier for the composition itself (e.g., `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`). This is the part you use when you want to refer to the latest version of the object.
-    2.  **Creating System ID**: Identifies the system that created this version (e.g., `local.ehrbase.org`).
-    3.  **Version Number**: An integer indicating the version of the composition (e.g., `1`, `2`).
-    The full `versioned_object_id` looks like: `[UUID]::[Creating System ID]::[Version]`.
+Before any compositions can be stored, an Electronic Health Record (EHR) must exist for the patient. This is typically a one-time operation per patient.
 
-### API Endpoint for Retrieving the Latest Version:
+### API Call: Create EHR
+- **Endpoint**: `POST /rest/openehr/v1/ehr`
+- **Method**: `POST`
+- **Headers**:
+    - `Content-Type: application/json`
+    - `Accept: application/json`
+- **Body**: Empty (The EHR ID is auto-generated by the server)
+- **Success Response (201 Created)**:
+  ```json
+  {
+    "ehr_id": {
+      "value": "generated-ehr-id-uuid"
+    },
+    "system_id": { "value": "ehrbase-system-id" },
+    "time_created": { "value": "timestamp" }
+  }
+  ```
+- **Action**: Securely store the `ehr_id.value`. This ID is essential for all subsequent operations related to this patient's record. In Postman, this is often saved as an environment variable (e.g., `{{ehr_id}}`).
 
-*   `GET /rest/openehr/v1/ehr/{ehr_id}/composition/{composition_uid}`
-    *   `{ehr_id}`: The ID of the EHR containing the composition.
-    *   `{composition_uid}`: The UUID part (the object ID itself, not the full versioned ID) of the composition's `versioned_object_id`.
+## Step 1: Creating a Composition (POST)
 
-### Steps to Retrieve a Composition (e.g., in Postman):
+Once an EHR exists, you can post clinical compositions to it. This example uses the vital signs template from Module 1.
 
-1.  **Obtain the Composition UID**: After creating a composition, copy the UUID from the response (usually found at the end of the `versioned_object_id` string, before `::local.ehrbase.org::1`).
-2.  **Set up the Request**:
-    *   Method: `GET`
-    *   URL: `https://openehr-bootcamp.medblocks.com/ehrbase/rest/openehr/v1/ehr/{your_ehr_id}/composition/{composition_uuid_copied_in_step_1}`
-3.  **Specify `Accept` Header for Desired Format**:
-    You can retrieve the composition in various formats by setting the `Accept` header:
-    *   `application/json`: For Canonical JSON.
-    *   `application/xml`: For Canonical XML.
-    *   `application/openehr.wt.flat+json`: For Flat JSON (if using a Web Template).
-    *   `application/openehr.wt.structured+json`: For Structured JSON (if using a Web Template).
-    The system stores the data in a standard openEHR format, and these are just different serialization options. You are not losing data by posting in one format and retrieving in another.
+### API Call: Create Composition
+- **Endpoint**: `POST /rest/openehr/v1/ehr/{ehr_id}/composition`
+    - Replace `{ehr_id}` with the actual ID obtained in Step 0.
+- **Method**: `POST`
+- **Headers**:
+    - `Content-Type: application/json` (Your request body is JSON)
+    - `Accept: application/json` (You expect a JSON response)
+    - `Prefer: return=representation` (Instructs the server to return the full created composition in the response. Use `return=minimal` for just a confirmation, which is often better in production but less informative during development.)
+- **Body**: The full composition data in canonical JSON format, based on your template (e.g., `JaimePM_vital_signs.v0.opt`).
+    - Key fields to customize in your JSON body: composer name, context times, and actual clinical values.
+- **Success Response (201 Created)**:
+    - The server returns the full composition, now including system-assigned UIDs.
+    - **Key values to note from the response headers or body**:
+        - `ETag` or `Location` header: Contains the `version_uid` of the newly created composition. This is often in the format `{versioned_object_uid}::{host_system_id}::{version_tree_id}` (e.g., `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx::ehrbase.org::1`).
+        - `composition_uid` (or `versioned_object_uid`): The base UID for this composition, which remains the same across versions. This is part of the `version_uid`.
+- **Action**:
+    - Store the `ehr_id`.
+    - Store the `composition_uid` (the version-independent part, e.g., `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`). Postman might save this as `{{composition_uid}}`.
+    - Store the full `version_uid` of this initial version (e.g., `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx::ehrbase.org::1`). Postman might save this as `{{preceding_version_uid}}` or `{{latest_version_uid}}` as it's needed for the `If-Match` header in subsequent updates or deletions.
 
-**Example**:
-If you posted a composition and got `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx::local.ehrbase.org::1`, you would use `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` as the `{composition_uid}` in the GET request.
+*(Content for preparing composition data and common creation issues can be referenced from `module-2-01-creating-compositions-api.md` or integrated here if desired for full consolidation.)*
 
-## 2. Updating Compositions
+## Step 2: Retrieving Compositions (GET)
 
-Existing compositions can be updated. OpenEHR handles this by creating a new version of the composition, preserving the history.
+You can retrieve the latest version of a composition or a specific historical version.
 
-### Key Concepts:
+### 2.1 Retrieving the Latest Version
 
-*   **Preceding Version UID**: To update a composition, you MUST provide the complete `versioned_object_id` of the *specific version* you intend to update. This is used in the `If-Match` header.
-*   **Versioning**: Each update creates a new version of the composition (e.g., version 1 becomes version 2, version 2 becomes version 3, and so on). All previous versions are retained.
+- **Endpoint**: `GET /rest/openehr/v1/ehr/{ehr_id}/composition/{versioned_object_uid}`
+    - `{versioned_object_uid}`: The base UID of the composition (e.g., the `{{composition_uid}}` captured earlier).
+- **Method**: `GET`
+- **Headers**:
+    - `Accept: application/json`
+- **Success Response (200 OK)**: The full JSON representation of the latest version of the composition. The `ETag` header will contain its specific `version_uid`.
 
-### API Endpoint for Update:
+### 2.2 Retrieving a Specific Historical Version
 
-*   `PUT /rest/openehr/v1/ehr/{ehr_id}/composition/{object_id}`
-    *   `{ehr_id}`: The ID of the EHR.
-    *   `{object_id}`: The UUID part of the composition's `versioned_object_id` (the object ID itself, not the full versioned ID).
+- **Endpoint**: `GET /rest/openehr/v1/ehr/{ehr_id}/composition/{version_uid}`
+    - `{version_uid}`: The complete, version-specific UID (e.g., `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx::ehrbase.org::1`).
+- **Method**: `GET`
+- **Headers**:
+    - `Accept: application/json`
+- **Success Response (200 OK)**: The JSON representation of that specific version of the composition.
 
-### Headers for Update:
+## Step 3: Updating a Composition (PUT)
 
-*   `Content-Type`: Must match the format of the composition data you are sending in the request body (e.g., `application/openehr.wt.flat+json`, `application/json`, `application/xml`).
-*   `Accept`: Specifies the desired format for the response (e.g., `application/json`).
-*   `If-Match`: **Crucial for updates**. This header must contain the full `versioned_object_id` of the composition version you are updating (e.g., `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx::local.ehrbase.org::1`).
+Updating a composition creates a new version; it doesn't alter existing versions. This requires optimistic locking using the `If-Match` header.
 
-### Steps to Update a Composition (e.g., in Postman):
+### API Call: Update Composition
+- **Endpoint**: `PUT /rest/openehr/v1/ehr/{ehr_id}/composition/{versioned_object_uid}`
+    - `{versioned_object_uid}`: The base UID of the composition you are updating.
+- **Method**: `PUT`
+- **Headers**:
+    - `Content-Type: application/json`
+    - `Accept: application/json`
+    - `If-Match: {current_latest_version_uid}` (CRITICAL: This must be the `version_uid` of the most recent version of the composition you intend to update. E.g., the `{{preceding_version_uid}}` or `{{latest_version_uid}}` from Postman. This prevents unintended overwrites if the composition was changed by someone else since you last fetched it.)
+    - `Prefer: return=representation` (To get the updated composition back. `return=minimal` for just confirmation.)
+- **Body**: The *entire* new version of the composition data in JSON format.
+- **Success Response (200 OK)**:
+    - The server returns the new version of the composition.
+    - The `ETag` or `Location` header will contain the new `version_uid` for this updated version.
+- **Action**: Update your stored `latest_version_uid` (e.g., `{{preceding_version_uid}}` in Postman) to this new `version_uid`.
 
-1.  **Retrieve the Composition to Update (Optional but Recommended)**: First, GET the composition you want to update. This helps ensure you have the latest version and its full `versioned_object_id`.
-2.  **Copy the Full `versioned_object_id`**: From the retrieved composition's metadata (e.g., in the response headers or body, often labeled `ETag` or `VERSION_UID`), copy the complete `versioned_object_id` (e.g., `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx::local.ehrbase.org::1`).
-3.  **Prepare the Request Body**:
-    *   Use the same format (Flat, Canonical JSON, XML) as the `Content-Type` header will indicate.
-    *   Modify the composition data as needed (e.g., change a vital sign value).
-    *   **Important**: If your request body format includes a field for the composition's UID (like `_uid` in some flat formats or a specific path in canonical formats), you might need to remove or nullify it. The system will generate the UID for the new version. The transcript specifically mentions removing the `vital_signs/uid` field when updating a flat JSON composition.
-4.  **Set up the PUT Request**:
-    *   Method: `PUT`
-    *   URL: `https://openehr-bootcamp.medblocks.com/ehrbase/rest/openehr/v1/ehr/{your_ehr_id}/composition/{composition_uuid}` (use the UUID part only in the URL).
-    *   Headers:
-        *   `Content-Type`: e.g., `application/openehr.wt.flat+json`
-        *   `Accept`: e.g., `application/json`
-        *   `If-Match`: The full `versioned_object_id` copied in step 2.
-    *   Body: The modified composition data.
-5.  **Execute the Request**:
-    *   A successful update will typically return a `200 OK` or `204 No Content` status, and the response headers will contain the `versioned_object_id` of the *newly created version* (e.g., `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx::local.ehrbase.org::2`).
+## Step 4: Deleting a Composition (DELETE)
 
-**Example Workflow**:
+Deleting a composition also requires optimistic locking via the `If-Match` header. This typically marks the composition as deleted rather than physically removing it, preserving audit trails.
 
-1.  You have a composition with `versioned_object_id`: `abc-123::local.ehrbase.org::1`.
-2.  To update it, you make a `PUT` request to `/rest/openehr/v1/ehr/{ehr_id}/composition/abc-123`.
-3.  The `If-Match` header of this `PUT` request must be `abc-123::local.ehrbase.org::1`.
-4.  The request body contains the new data for the composition.
-5.  Upon success, EHRbase creates a new version. If you retrieve `abc-123` again, you'll get version 2, and its `versioned_object_id` will be `abc-123::local.ehrbase.org::2`.
-6.  If you want to update it again, your next `PUT` request's `If-Match` header must be `abc-123::local.ehrbase.org::2`.
+### API Call: Delete Composition
+- **Endpoint**: `DELETE /rest/openehr/v1/ehr/{ehr_id}/composition/{versioned_object_uid}`
+    - `{versioned_object_uid}`: The base UID of the composition to be deleted.
+- **Method**: `DELETE`
+- **Headers**:
+    - `Accept: application/json` (Though often no body is returned on success)
+    - `If-Match: {current_latest_version_uid}` (CRITICAL: This must be the `version_uid` of the most recent version of the composition. This ensures you are deleting the version you intend to.)
+- **Success Response (204 No Content)**: Indicates successful deletion. No response body.
 
-## 3. Retrieving Specific Historical Versions
+## Key HTTP Headers for Composition Management
 
-You can retrieve a specific historical version of a composition if you know its full `versioned_object_id`. This is useful for viewing the history of changes.
+- **`Content-Type: application/json`**: Specifies that the request body (for POST, PUT) is in JSON format. Essential.
+- **`Accept: application/json`**: Informs the server that the client expects the response in JSON format. Essential.
+- **`If-Match: {version_uid}`**: Used for optimistic concurrency control in `PUT` and `DELETE` operations. It ensures that the operation is performed only if the client's version of the resource matches the server's current version, preventing lost updates or accidental deletions on stale data. The value is the `version_uid` of the composition version being targeted for update/delete.
+- **`Prefer: return=representation | return=minimal`**:
+    - `return=representation`: Requests the server to return the full resource representation after a successful `POST` or `PUT`. Useful during development and learning.
+    - `return=minimal`: Requests minimal confirmation (e.g., just headers or a success status). More efficient for production.
 
-### API Endpoint for Retrieving a Specific Version:
+## Understanding Key Identifiers
 
-*   `GET /rest/openehr/v1/ehr/{ehr_id}/composition/{versioned_composition_id}`
-    *   `{ehr_id}`: The ID of the EHR.
-    *   `{versioned_composition_id}`: This is the **full** versioned ID of the composition, including the UUID, creating system, and version number (e.g., `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx::local.ehrbase.org::1`).
+- **`ehr_id`**: The unique identifier for a patient's Electronic Health Record.
+- **`versioned_object_uid` (or `composition_uid` in Postman variables)**: The persistent, version-independent identifier for a composition (e.g., `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`). This ID is used in the path for GET (latest), PUT, and DELETE operations.
+- **`version_uid` (or `object_version_id`, often stored as `preceding_version_uid` or `latest_version_uid` in Postman)**: The unique identifier for a *specific version* of a composition (e.g., `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx::ehrbase.org::1`). This is used in the `If-Match` header for PUT/DELETE operations and in the path for GETting a specific version.
 
-### Steps to Retrieve a Specific Version:
+## Postman and Practical Application
 
-1.  **Identify the `versioned_object_id`**: You need the complete `versioned_object_id` of the specific version you want to retrieve. For example, if you updated a composition from version 1 to version 2, and then to version 3, you can retrieve version 1, 2, or 3 by using their respective full `versioned_object_id`s.
-2.  **Set up the GET Request**:
-    *   Method: `GET`
-    *   URL: `https://openehr-bootcamp.medblocks.com/ehrbase/rest/openehr/v1/ehr/{your_ehr_id}/composition/{full_versioned_composition_id_from_step_1}`
-    *   Headers: Specify the `Accept` header for the desired format (e.g., `application/openehr.wt.flat+json`, `application/json`).
+The bootcamp's Postman collection (`openEHR APIs.postman_collection.json`) provides working examples of these calls. Pay attention to how:
+- Environment variables like `{{ehr_id}}`, `{{composition_uid}}`, and `{{preceding_version_uid}}` (or a similar name for the latest version UID) are used to chain requests.
+- The "Tests" tab in Postman requests is often used to capture these UIDs from responses and set them as environment variables for subsequent calls.
 
-**Example**:
-To retrieve version 1 of a composition whose `versioned_object_id` is `abc-123::local.ehrbase.org::1`, you would use that full string as the `{versioned_composition_id}` in the GET request. To get version 2 (`abc-123::local.ehrbase.org::2`), you would use that specific versioned ID.
+This workflow—creating an EHR, then creating and managing compositions—is fundamental to building openEHR applications.
 
-This allows you to access the historical state of the composition. All versions are preserved in the system by default, providing a full audit trail of changes.
+## Common Issues and Troubleshooting
 
-## 4. Deleting Compositions
+- **`400 Bad Request`**: Often due to malformed JSON in the request body or incorrect data types not matching the template.
+- **`401 Unauthorized`**: Authentication details are missing or incorrect.
+- **`404 Not Found`**: The specified `ehr_id` or `composition_uid` does not exist. Double-check your IDs.
+- **`409 Conflict` / `412 Precondition Failed` (for PUT/DELETE)**: The `If-Match` header value (the `version_uid`) does not match the server's current version of the composition. This means the composition was updated by another process since you last fetched it. You'll need to retrieve the latest version and retry your update/delete with the new `version_uid`.
+- **"Template not found"**: The `template_id` within your composition JSON does not match any template uploaded to the EHRbase server.
+- **"Observation contains no results"**: Ensure all required data points within your composition's observations have actual values, not empty arrays or nulls where data is expected.
 
-Compositions can be deleted from the EHR. The openEHR REST API specifies deletion using the `preceding_version_uid`.
-
-### Key Concepts for Deletion:
-
-*   **Preceding Version UID**: To delete a composition, you MUST provide the complete `versioned_object_id` of the *latest existing version* of the composition.
-*   **Effect of Deletion**: After deletion, the composition will no longer be retrievable through queries that fetch the latest version (e.g., AQL queries or GET requests using only the base UUID). However, the specific version that was marked for deletion (and potentially its history) might still be accessible if queried directly by its full `versioned_object_id`, though it's effectively removed from the active record.
-
-### API Endpoint for Deletion:
-
-*   `DELETE /rest/openehr/v1/ehr/{ehr_id}/composition/{preceding_version_uid}`
-    *   `{ehr_id}`: The ID of the EHR.
-    *   `{preceding_version_uid}`: The **full** `versioned_object_id` of the latest version of the composition to be deleted (e.g., `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx::local.ehrbase.org::3`).
-
-### Steps to Delete a Composition (e.g., in Postman):
-
-1.  **Identify the `versioned_object_id` of the Latest Version**: Ensure you have the complete `versioned_object_id` of the most recent version of the composition you intend to delete. If the composition is at version 3, you need the versioned ID for version 3.
-2.  **Set up the DELETE Request**:
-    *   Method: `DELETE`
-    *   URL: `https://openehr-bootcamp.medblocks.com/ehrbase/rest/openehr/v1/ehr/{your_ehr_id}/composition/{full_versioned_object_id_of_latest_version}`
-    *   Headers: No specific `Content-Type` or `If-Match` is typically required for the DELETE operation itself, but ensure your Postman setup or client sends appropriate default headers if needed.
-3.  **Execute the Request**:
-    *   A successful deletion will typically return a `204 No Content` status.
-
-**Behavior After Deletion**:
-
-*   If you attempt to `GET` the composition using just its base UUID (e.g., `/rest/openehr/v1/ehr/{ehr_id}/composition/{uuid}`), you should receive a `204 No Content` or a `404 Not Found`, indicating it's no longer considered an active/latest composition.
-*   AQL queries will generally no longer return this deleted composition.
-*   As per the transcript, attempting to `GET` the specific `versioned_object_id` that was deleted might still return that version's data, but it's logically deleted from the main record.
-
-**Important Note on Deletion vs. Audit**: While the API allows deletion, in many healthcare scenarios, true deletion is discouraged. Instead, compositions might be marked as erroneous or amended, preserving the full audit trail. The openEHR specification supports robust versioning, which is key for this. Deletion should be used with caution and understanding of its implications on data integrity and auditability.
-
-This documentation should help you understand the processes of retrieving, updating, managing versions of, and deleting compositions as discussed in the bootcamp sessions.
+Refer to the API specification or EHRbase documentation for detailed error code meanings if you encounter other issues.
