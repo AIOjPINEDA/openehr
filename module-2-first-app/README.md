@@ -6,6 +6,9 @@ This module guides me through building my first web application that interacts w
 
 - **[Module 2 Kickoff Summary](./module-2-00-kickoff-summary.md)** - Comprehensive overview of assignment requirements, conceptual framework, and technical guidance
 - **[Creating Compositions via API](./module-2-01-creating-compositions-api.md)** - Step-by-step guide for creating EHRs and compositions using OpenEHR REST API
+- **[Retrieving and Updating Compositions](./module-2-02-retrieving-and-updating-compositions.md)** - Guide for querying and updating existing compositions
+- **[Development Techniques Comparison](./module-2-03-development-techniques-comparison.md)** - Detailed comparison of manual flat JSON vs. Medblocks UI approaches for building OpenEHR applications
+- **[Tutorial Implementation with Medblocks UI](./module-2-04-tutorial-implementation-medblocks-ui.md)** - Complete step-by-step tutorial following Professor Siddarth's implementation using Svelte and Medblocks UI
 
 ## Assignment Specification
 
