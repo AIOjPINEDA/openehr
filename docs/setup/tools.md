@@ -34,6 +34,55 @@ CKM is a repository of community-validated archetypes and templates.
 
 ## Development Tools
 
+### VS Code Extensions for OpenEHR Development
+
+#### Essential OpenEHR Extensions
+```vscode-extensions
+nedaphealthcare.openehr-adl-lsp,dipsas.aql
+```
+
+#### Detailed Extension Analysis
+
+**nedaphealthcare.openehr-adl-lsp** - *Comprehensive OpenEHR Development Suite*
+- **File Support**: .adl, .adl2, .adlf, .adlt, .adls, .aql, .opt2
+- **ADL 2 Features**:
+  - Advanced syntax highlighting and validation
+  - Model validation with real-time error checking
+  - Code folding and document outline navigation
+  - Example generation (JSON, Flat JSON, XML formats)
+  - OPT2 generation (ADL, JSON, XML outputs)
+  - Hover info for complex objects and attributes
+  - Automatic terminology constraint addition
+- **AQL Features**:
+  - Syntax highlighting and validation
+  - Path annotation with human-readable names
+  - Code completion for archetype paths
+  - Integration with known archetypes
+- **ADL 1.4 Support**: Basic highlighting, outline, ADL 2 conversion
+- **Use Cases**: Complete OpenEHR development lifecycle, template creation, archetype modeling
+
+**dipsas.aql** - *Specialized AQL Query Development*
+- **File Support**: .aql files exclusively
+- **Core Features**:
+  - Optimized syntax highlighting for AQL
+  - File extension association and recognition
+  - Clean, focused AQL development experience
+- **Developer**: DIPS ASA (Norwegian healthcare IT leader)
+- **Use Cases**: Intensive AQL query development, data retrieval optimization
+
+#### Bootcamp Module Applications
+
+**Module 2 (Current)**: 
+- `nedaphealthcare.openehr-adl-lsp` → Template review, basic AQL queries
+- `dipsas.aql` → Composition listing queries, data filtering
+
+**Module 3-5 (Future)**:
+- Complex archetype modeling (nedap extension)
+- Advanced AQL analytics queries (dips extension)
+- Template validation and OPT generation (nedap extension)
+
+**Recommendation**: Install both extensions for complementary OpenEHR development capabilities.
+
 ### Postman
 
 Postman is a platform for API development and testing.
