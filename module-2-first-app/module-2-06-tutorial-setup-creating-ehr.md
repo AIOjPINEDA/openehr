@@ -6,10 +6,9 @@ This tutorial covers the complete initial setup for Module 2's vital signs appli
 
 ## Prerequisites
 
-- **Node.js and npm** installed
+- **Conda environment** activated (`openehr-env`)
 - **Postman** for API testing  
-- **Code editor** (Cursor IDE or VS Code recommended)
-- **Template from Module 1** (vital signs template created in Archetype Designer)
+- **VS Code** as code editor
 - Access to bootcamp OpenEHR server: `https://openehr-bootcamp.medblocks.com/ehrbase`
 
 ## Step 1: Create EHR ID via Postman
@@ -21,10 +20,9 @@ This tutorial covers the complete initial setup for Module 2's vital signs appli
 
 ### Process
 1. Open Postman
-2. Navigate to the EHR creation endpoint
-3. Send POST request
-4. **Save the returned EHR ID** - you'll use it throughout the application
-![alt text](image-4.png)
+2. Create POST request to: `https://openehr-bootcamp.medblocks.com/ehrbase/rest/openehr/v1/ehr`
+3. Set headers: `Content-Type: application/json`, `Accept: application/json`
+4. Send request and **save the returned EHR ID**
 
 ### Expected Response
 ```json
@@ -37,44 +35,38 @@ This tutorial covers the complete initial setup for Module 2's vital signs appli
 
 ## Step 2: Initialize Svelte Project
 
-### Terminal Commands
+### Create Project
 ```bash
-# Create new Svelte project
 npx sv create
-
-# Follow the interactive prompts:
 ```
 
-### Configuration Prompts
+### Configuration Choices
 ```
-? What would you like your project to be called? 
+? Where would you like your project to be created?
 > 2-first-app
 
 ? Which template would you like?
 > SvelteKit minimal
 
-? Do you want TypeScript?
-> No (select JavaScript for simplicity)
+? Add type checking with TypeScript?
+> Yes, using JavaScript with JSDoc comments
 
-? Do you want Tailwind CSS?
-> Yes
+? What would you like to add to your project?
+> none
 
-? Which package manager?
-> pnpm (faster than npm)
+? Which package manager do you want to install dependencies with?
+> pnpm
 ```
 
-### Navigate to Project
+### Handle Installation Issues
+If pnpm installation fails:
 ```bash
+# Install pnpm globally
+npm install -g pnpm
+
+# Navigate to project and install dependencies
 cd 2-first-app
-```
-
-### Open in Code Editor
-```bash
-# For Cursor IDE
-cursor 2-first-app
-
-# For VS Code  
-code 2-first-app
+pnpm install
 ```
 
 ### Project Structure
@@ -90,28 +82,28 @@ code 2-first-app
 └── tailwind.config.js
 ```
 
-## Step 3: Development Environment Setup
+## Step 3: Start Development Environment
 
-### Open Project in Editor
+### Open Project in VS Code
 ```bash
-cursor 2-first-app
+code 2-first-app
 ```
 
 ### Start Development Server
 ```bash
-npm run dev
+pnpm run dev
 ```
 - Application runs on `http://localhost:5173`
-- Default page shows SvelteKit welcome message
+- You'll see the SvelteKit welcome page
 
-## Step 4: Integrate EHR ID into Application
+## Step 4: Integrate EHR ID
 
-### Edit Main Route File
+### Edit Main Page
 **File**: `src/routes/+page.svelte`
 
 ```svelte
 <script>
-  let ehrId = "550e8400-e29b-41d4-a716-446655440000"; // Your actual EHR ID
+  let ehrId = "73a2a39a-1583-42ff-ad2f-641e52bbc687"; // Replace with your EHR ID
 </script>
 
 <h1>Welcome to SvelteKit</h1>
@@ -120,36 +112,24 @@ npm run dev
 <p>EHR ID: {ehrId}</p>
 ```
 
-### Verification
+### Verify Setup
 - Save the file
-- Check browser to see EHR ID displayed
-- Confirms Svelte reactive updates are working
+- Check `http://localhost:5173` to see your EHR ID displayed
+- Setup is complete when you see the EHR ID on the page
 
-## Technology Stack Summary
+## Technology Stack
 
-- **Frontend Framework**: Svelte + SvelteKit
-- **Styling**: Tailwind CSS
+- **Frontend**: Svelte + SvelteKit  
 - **Package Manager**: pnpm
-- **Language**: JavaScript (TypeScript optional)
-- **Development Server**: Vite (built into SvelteKit)
+- **Language**: JavaScript with JSDoc
+- **Development Server**: Vite
 
 ## Next Steps
 
-With the basic setup complete, the next tutorials will cover:
-1. **Creating compositions** using Medblocks UI
-2. **Listing compositions** with AQL queries
-3. **Deleting compositions** via REST API
-4. **Updating compositions** (optional advanced feature)
-
-## Key Takeaways
-
-- **EHR ID is essential** - it's required for all composition operations
-- **Svelte is beginner-friendly** - similar to HTML/CSS/JS with reactive features
-- **Tailwind CSS** accelerates styling development
-- **Development environment** should be tested before proceeding with features
+Ready for the next tutorial: **Creating compositions using Medblocks UI**
 
 ## Troubleshooting
 
-- **Port conflicts**: Change port in `vite.config.js` if 5173 is occupied
-- **Package installation**: Use `pnpm install` if dependencies are missing
-- **EHR ID issues**: Verify the POST request succeeded and copy the exact ID value
+**pnpm not found**: Install with `npm install -g pnpm`
+**Port 5173 occupied**: Project will automatically use next available port
+**Dependencies missing**: Run `pnpm install` in project directory

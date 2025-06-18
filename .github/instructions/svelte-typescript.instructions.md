@@ -2,23 +2,26 @@
 applyTo: "**/*.{js,ts,svelte}"
 ---
 
-# Svelte + TypeScript Standards for OpenEHR
+# Svelte + JavaScript Standards for OpenEHR Bootcamp
 
-Use Svelte with TypeScript strict mode enabled.
+Based on Professor Siddarth's bootcamp methodology and real project setup.
+
+Use Svelte with JavaScript and JSDoc comments (not TypeScript strict mode).
 Name components with PascalCase, files with kebab-case.
-Validate props using TypeScript interfaces.
-Use `SvelteComponent` types for component props.
+Use JSDoc for type annotations instead of TypeScript interfaces.
+Use basic Svelte component structure without complex typing.
 
-Use Tailwind CSS for consistent, responsive design.
-Create custom stores for openEHR-specific state management.
-Implement accessibility compliance with ARIA labels and semantic HTML.
-Add error boundaries for API interaction failures.
+Use pnpm as package manager following bootcamp standards.
+Focus on learning OpenEHR concepts first, advanced typing later.
+Implement simple reactive variables with `let` declarations.
+Use Medblocks UI web components for OpenEHR form generation.
 
-Organize shared components in `/src/lib/` for reusability.
-Use feature-based directory structure.
-Separate UI components, API clients, data models, and utilities.
+Organize code in SvelteKit route-based structure (`src/routes/`).
+Keep components simple and focused on OpenEHR learning objectives.
+Store EHR IDs and composition data in component state.
+Handle EHRbase API calls with basic fetch() and error handling.
 
-Handle EHRbase API calls with proper error handling.
-Store composition UIDs in component state.
-Use reactive statements for data updates.
-Implement loading states for async operations.
+Reference official Svelte documentation: https://svelte.dev/docs/kit/introduction
+Use SvelteKit minimal template as starting point.
+Implement loading states for async OpenEHR operations.
+Store OpenEHR templates as JSON files in routes directory.
