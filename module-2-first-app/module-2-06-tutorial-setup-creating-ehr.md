@@ -24,12 +24,13 @@ This tutorial covers the complete initial setup for Module 2's vital signs appli
 2. Navigate to the EHR creation endpoint
 3. Send POST request
 4. **Save the returned EHR ID** - you'll use it throughout the application
+![alt text](image-4.png)
 
 ### Expected Response
 ```json
 {
   "ehr_id": {
-    "value": "550e8400-e29b-41d4-a716-446655440000"
+    "value": "73a2a39a-1583-42ff-ad2f-641e52bbc687"
   }
 }
 ```

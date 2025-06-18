@@ -24,8 +24,8 @@ dependencies:
   # Core Python and Node.js
   - python=3.11  # Specific Python version for compatibility
   - pip          # Package installer for Python
-  # - nodejs=18    # JavaScript runtime for web development (will install separately with nvm)
-  # - npm          # Node package manager (will install separately with nvm)
+  - nodejs=18    # JavaScript runtime for web development
+  - npm          # Node package manager
 
   # Data analysis and scientific computing
   - jupyter      # Interactive notebooks for exploration
