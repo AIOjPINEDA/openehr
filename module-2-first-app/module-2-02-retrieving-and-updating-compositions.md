@@ -103,6 +103,7 @@ You can retrieve the latest version of a composition or a specific historical ve
 - **Headers**:
     - `Accept: application/json`
 - **Success Response (200 OK)**: The full JSON representation of the latest version of the composition. The `ETag` header will contain its specific `version_uid`.
+![alt text](image-1.png)
 
 ### 2.2 Retrieving a Specific Historical Version
 
@@ -112,6 +113,7 @@ You can retrieve the latest version of a composition or a specific historical ve
 - **Headers**:
     - `Accept: application/json`
 - **Success Response (200 OK)**: The JSON representation of that specific version of the composition.
+![alt text](image-2.png)
 
 ## Step 3: Updating a Composition (PUT)
 
@@ -131,6 +133,8 @@ Updating a composition creates a new version; it doesn't alter existing versions
     - The server returns the new version of the composition.
     - The `ETag` or `Location` header will contain the new `version_uid` for this updated version.
 - **Action**: Update your stored `latest_version_uid` (e.g., `{{preceding_version_uid}}` in Postman) to this new `version_uid`.
+
+![alt text](image.png)
 
 ## Step 4: Deleting a Composition (DELETE)
 
@@ -154,7 +158,7 @@ While the openEHR REST API supports various content types (e.g., XML, different 
 - **`Prefer: return=representation | return=minimal`**:
     - `return=representation`: Requests the server to return the full resource representation after a successful `POST` or `PUT`. Useful during development and learning.
     - `return=minimal`: Requests minimal confirmation (e.g., just headers or a success status). More efficient for production.
-
+![alt text](image-3.png)
 ## Understanding Key Identifiers
 
 - **`ehr_id`**: The unique identifier for a patient's Electronic Health Record.

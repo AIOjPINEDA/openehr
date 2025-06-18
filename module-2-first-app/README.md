@@ -78,8 +78,8 @@ I'll build a web application that allows patients to:
 
 ### Official Documentation
 
-- [EHRbase REST API Documentation](https://ehrbase.readthedocs.io/en/latest/02_getting_started/04_rest_api.html)
-- [openEHR REST API Specification](https://specifications.openehr.org/releases/ITS-REST/latest/index.html)
+- [EHRbase REST API Documentation](https://docs.ehrbase.org/api/hip-ehrbase/openehr)
+- [openEHR EHR REST API Specification](https://specifications.openehr.org/releases/ITS-REST/Release-1.0.3/ehr.html)
 - [AQL Documentation](https://specifications.openehr.org/releases/QUERY/latest/AQL.html)
 
 ### Tutorials and Guides
