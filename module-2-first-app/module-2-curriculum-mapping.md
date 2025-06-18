@@ -32,7 +32,7 @@ Map and structure Module 2 contents to avoid repetition and maximize academic va
 ### 🎓 **Phase 3: Practical Tutorials** (Videos 17-21)
 | Topic | Description | Status | Document Location |
 |-------|-------------|--------|-------------------|
-| [Tutorial] Setup and creating an EHR | Initial setup | ✅ **COMPLETED** | `module-2-04-tutorial-implementation-medblocks-ui.md` |
+| [Tutorial] Setup and creating an EHR | Initial setup | ✅ **COMPLETED** | `module-2-06-tutorial-setup-creating-ehr.md` |
 | [Tutorial] Creating compositions using Medblocks UI | Implementation with UI library | ✅ **COMPLETED** | `module-2-04-tutorial-implementation-medblocks-ui.md` |
 | [Tutorial] Listing compositions | Query and visualization | ✅ **COMPLETED** | `module-2-04-tutorial-implementation-medblocks-ui.md` |
 | [Tutorial] Deleting compositions | Data management | ✅ **COMPLETED** | `module-2-04-tutorial-implementation-medblocks-ui.md` |

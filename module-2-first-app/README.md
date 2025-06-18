@@ -9,6 +9,8 @@ This module guides me through building my first web application that interacts w
 - **[Retrieving and Updating Compositions](./module-2-02-retrieving-and-updating-compositions.md)** - Guide for querying and updating existing compositions
 - **[Development Techniques Comparison](./module-2-03-development-techniques-comparison.md)** - Detailed comparison of manual flat JSON vs. Medblocks UI approaches for building OpenEHR applications
 - **[Tutorial Implementation with Medblocks UI](./module-2-04-tutorial-implementation-medblocks-ui.md)** - Complete step-by-step tutorial following Professor Siddarth's implementation using Svelte and Medblocks UI
+- **[Technique: Using Medblocks UI](./module-2-05-technique-medblocks-ui.md)** - Detailed guide for implementing OpenEHR applications with Medblocks UI web components
+- **[Tutorial: Setup and Creating EHR](./module-2-06-tutorial-setup-creating-ehr.md)** - Initial project setup and EHR creation via Postman
 
 ## Assignment Specification
 
